@@ -1,8 +1,11 @@
 <resources>
-    <string name="app_name">arXiv3</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
+    <string name="app_name">arXiv Mobile</string>
+    <string name="tab_text_1">Categories</string>
+    <string name="tab_text_2">Favorites</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="add_favorites">Add to Favorites</string>
+    <string name="remove_favorites">Remove From Favorites</string>
+    <string name="added_to_favorites">Added custom search to your favorites</string>
+    <string name="added_to_favorites_rss">Added custom search to your favorites.\n\nYour source preferences is RSS: so, this favorite will not show up in the widget.</string>
 </resources>

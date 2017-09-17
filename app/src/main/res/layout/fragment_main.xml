@@ -19,4 +19,12 @@
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
 
+    <ListView
+        android:id="@+id/tablist"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="false"
+        android:layout_weight="0.6"
+        android:cacheColorHint="#3b3838" />
+
 </android.support.constraint.ConstraintLayout>
