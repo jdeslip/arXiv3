@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">arXiv Mobile</string>
+    <string name="about_text">arXiv mobile is an open-source application to browse daily scientific articles submitted to arXiv.org and to search the entire arXiv.org database. If you like it and use it often, please consider buying the supporter version of the application to support the developer\'s efforts.\n\nViewing PDFs requires a PDF viewer (try AdobeReader from the Market)\n\nYou can add categories and custom searches to your favorites list and can share articles by pressing menu on the article screen.\n\narXiv mobile contains a corresponding widget that checks for new articles in your favorite categories/searches once every hour. Note that favorites that were created with the (non-default) RSS source preference on will not be included in the widget.</string>
+    <string name="about_arxiv_droid">About arXiv mobile</string>
     <string name="tab_text_1">Categories</string>
     <string name="tab_text_2">Favorites</string>
     <string name="action_settings">Settings</string>
@@ -8,4 +10,9 @@
     <string name="remove_favorites">Remove From Favorites</string>
     <string name="added_to_favorites">Added custom search to your favorites</string>
     <string name="added_to_favorites_rss">Added custom search to your favorites.\n\nYour source preferences is RSS: so, this favorite will not show up in the widget.</string>
+    <string name="menu_about">About</string>
+    <string name="menu_view_history">View PDF History</string>
+    <string name="menu_clear_history">Clear PDF History</string>
+    <string name="menu_preferences">Preferences</string>
+    <string name="title_activity_settings">Settings</string>
 </resources>

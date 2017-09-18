@@ -1,6 +1,11 @@
 package com.jackalopeapps.android.arxiv3;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,15 +28,18 @@ import android.view.ViewGroup;
 
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -47,16 +56,19 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
-    public Context thisActivity;
+    public static AdapterView.OnItemClickListener thisActivityListener;
 
     private static ListView catList;
     private static ListView favList;
 
     private arXivDB droidDB;
     private int vFlag = 1;
+    private static List<History> historys;
     private static List<Feed> favorites;
     private static String[] unreadList;
     private static String[] favoritesList;
+
+    private int mySourcePref = 0;
 
     static String[] items = { "Astrophysics", "Condensed Matter", "Computer Science",
             "General Relativity", "HEP Experiment", "HEP Lattice",
@@ -280,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        thisActivity = this;
+        thisActivityListener = this;
 
         Log.d("Arx","Opening Database 3");
         droidDB = new arXivDB(this);
@@ -313,6 +325,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
+        mySourcePref=Integer.parseInt(prefs.getString("sourcelist", "0"));
+
     }
 
 
@@ -331,8 +346,38 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_about) {
+            String str = getString(R.string.about_text);
+            TextView wv = new TextView(this);
+            wv.setPadding(16, 0, 16, 16);
+            wv.setText(str);
+
+            ScrollView scwv = new ScrollView(this);
+            scwv.addView(wv);
+
+            Dialog dialog = new Dialog(this) {
+                public boolean onKeyDown(int keyCode, KeyEvent event) {
+                    if (keyCode != KeyEvent.KEYCODE_DPAD_LEFT)
+                        this.dismiss();
+                    return true;
+                }
+            };
+            dialog.setTitle(R.string.about_arxiv_droid);
+            dialog
+                    .addContentView(scwv, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+            dialog.show();
+            return (true);
+        } else if (id == R.id.action_view_history) {
+            //XXX Need to enable history window
+            //Intent myIntent = new Intent(this, HistoryWindow.class);
+            //startActivity(myIntent);
+            return (true);
+        } else if (id == R.id.action_clear_history) {
+            deleteFiles();
+            return (true);
+        } else if (id == R.id.action_preferences) {
+            startActivity(new Intent(this, EditPreferences.class));
+            return (true);
         }
 
         return super.onOptionsItemSelected(item);
@@ -375,11 +420,13 @@ public class MainActivity extends AppCompatActivity {
 
             if (currentTab == 1) {
                 catList = (ListView) rootView.findViewById(R.id.tablist);
+                catList.setOnItemClickListener(thisActivityListener);
                 catList.setAdapter(new ArrayAdapter<String>(this.getContext(),
                         android.R.layout.simple_list_item_1, items));
                 registerForContextMenu(catList);
             } else if (currentTab == 2) {
                 favList = (ListView) rootView.findViewById(R.id.tablist);
+                favList.setOnItemClickListener(thisActivityListener);
                 List<String> lfavorites = new ArrayList<String>();
                 List<String> lunread = new ArrayList<String>();
                 for (Feed feed : favorites) {
@@ -479,19 +526,19 @@ public class MainActivity extends AppCompatActivity {
                 icount++;
             }
         } else {
-            //XXX We need to uncomment this when get preferences back
-            //if (mySourcePref == 0) {
+            //XXX mySourcePref Doesn't get updated after a change in prefences until the app is opened again
+            if (mySourcePref == 0) {
                 String tempquery = "search_query=cat:" + urls[info.position] + "*";
                 String tempurl = "http://export.arxiv.org/api/query?" + tempquery
                         + "&sortBy=submittedDate&sortOrder=ascending";
                 droidDB.insertFeed(shortItems[info.position], tempquery, tempurl,-1,-1);
-            //} else {
-            //    String tempquery = urls[info.position];
-            //    String tempurl = tempquery;
-            //    droidDB.insertFeed(shortItems[info.position]+" (RSS)", shortItems[info.position], tempurl,-2,-2);
-            //    Toast.makeText(this, R.string.added_to_favorites_rss,
-            //            Toast.LENGTH_SHORT).show();
-            //}
+            } else {
+                String tempquery = urls[info.position];
+                String tempurl = tempquery;
+                droidDB.insertFeed(shortItems[info.position]+" (RSS)", shortItems[info.position], tempurl,-2,-2);
+                Toast.makeText(this, R.string.added_to_favorites_rss,
+                        Toast.LENGTH_SHORT).show();
+            }
         }
 
         droidDB.close();
@@ -500,6 +547,121 @@ public class MainActivity extends AppCompatActivity {
         updateFavList();
 
         return true;
+    }
+
+    public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+
+        Log.d("Arx","Im in onItemClick");
+
+        if (a == favList) {
+
+            String tempname = "";
+            String tempurl = "";
+            String tempquery = "";
+
+            Log.d("Arx","Opening Database 4");
+            droidDB = new arXivDB(this);
+            favorites = droidDB.getFeeds();
+            droidDB.close();
+            Log.d("Arx","Closed Database 4");
+
+            int icount = 0;
+            for (Feed feed : favorites) {
+                if (icount == position) {
+                    tempquery = feed.title;
+                    tempname = feed.shortTitle;
+                    tempurl = feed.url;
+                }
+                icount++;
+            }
+
+            // XXX - What do we do here;
+            //if (tempurl.contains("query")) {
+            //    Intent myIntent = new Intent(this, SearchListWindow.class);
+            //    myIntent.putExtra("keyquery", tempname);
+            //    myIntent.putExtra("keyname", tempquery);
+            //    myIntent.putExtra("keyurl", tempurl);
+            //    startActivity(myIntent);
+            //} else {
+            //    Intent myIntent = new Intent(this, RSSListWindow.class);
+            //    myIntent.putExtra("keyname", tempname);
+            //    myIntent.putExtra("keyurl", tempurl);
+            //    startActivity(myIntent);
+            //}
+
+        } else {
+            if (itemsFlag[position] == 0) {
+                // XXX
+                //if (mySourcePref == 1) {
+                //    Intent myIntent = new Intent(this, RSSListWindow.class);
+                //    myIntent.putExtra("keyname", shortItems[position]);
+                //    myIntent.putExtra("keyurl", urls[position]);
+                //    startActivity(myIntent);
+                //} else {
+                //    Intent myIntent = new Intent(this, SearchListWindow.class);
+                //    myIntent.putExtra("keyname", shortItems[position]);
+                //    String tempquery = "search_query=cat:" + urls[position] + "*";
+                //    myIntent.putExtra("keyquery", tempquery);
+                //    String tempurl = "http://export.arxiv.org/api/query?"
+                //            + tempquery
+                //            + "&sortBy=submittedDate&sortOrder=ascending";
+                //    myIntent.putExtra("keyurl", tempurl);
+                //    startActivity(myIntent);
+                //}
+            } else {
+                Intent myIntent = new Intent(this, SubArxiv.class);
+                myIntent.putExtra("keyname", shortItems[position]);
+                // XXX this should be made smarter
+                switch (itemsFlag[position]) {
+                    case 1:
+                        myIntent.putExtra("keyitems", asItems);
+                        myIntent.putExtra("keyurls", asURLs);
+                        myIntent.putExtra("keyshortitems", asShortItems);
+                        break;
+                    case 2:
+                        myIntent.putExtra("keyitems", cmItems);
+                        myIntent.putExtra("keyurls", cmURLs);
+                        myIntent.putExtra("keyshortitems", cmShortItems);
+                        break;
+                    case 3:
+                        myIntent.putExtra("keyitems", csItems);
+                        myIntent.putExtra("keyurls", csURLs);
+                        myIntent.putExtra("keyshortitems", csShortItems);
+                        break;
+                    case 4:
+                        myIntent.putExtra("keyitems", mtItems);
+                        myIntent.putExtra("keyurls", mtURLs);
+                        myIntent.putExtra("keyshortitems", mtShortItems);
+                        break;
+                    case 5:
+                        myIntent.putExtra("keyitems", mpItems);
+                        myIntent.putExtra("keyurls", mpURLs);
+                        myIntent.putExtra("keyshortitems", mpShortItems);
+                        break;
+                    case 6:
+                        myIntent.putExtra("keyitems", nlItems);
+                        myIntent.putExtra("keyurls", nlURLs);
+                        myIntent.putExtra("keyshortitems", nlShortItems);
+                        break;
+                    case 7:
+                        myIntent.putExtra("keyitems", qbItems);
+                        myIntent.putExtra("keyurls", qbURLs);
+                        myIntent.putExtra("keyshortitems", qbShortItems);
+                        break;
+                    case 8:
+                        myIntent.putExtra("keyitems", qfItems);
+                        myIntent.putExtra("keyurls", qfURLs);
+                        myIntent.putExtra("keyshortitems", qfShortItems);
+                        break;
+                    case 9:
+                        myIntent.putExtra("keyitems", stItems);
+                        myIntent.putExtra("keyurls", stURLs);
+                        myIntent.putExtra("keyshortitems", stShortItems);
+                        break;
+                }
+                startActivity(myIntent);
+            }
+        }
     }
 
     public void updateFavList() {
@@ -541,4 +703,58 @@ public class MainActivity extends AppCompatActivity {
         registerForContextMenu(favList);
 
     }
+
+    private void deleteFiles() {
+        File dir = new File("/sdcard/arXiv");
+
+        String[] children = dir.list();
+        if (children != null) {
+            for (int i = 0; i < children.length; i++) {
+                String filename = children[i];
+                File f = new File("/sdcard/arXiv/" + filename);
+                if (f.exists()) {
+                    f.delete();
+                }
+            }
+        }
+
+        File dir2 = new File("/emmc/arXiv");
+
+        String[] children2 = dir2.list();
+        if (children2 != null) {
+            for (int i = 0; i < children2.length; i++) {
+                String filename = children2[i];
+                File f = new File("/emmc/arXiv/" + filename);
+                if (f.exists()) {
+                    f.delete();
+                }
+            }
+        }
+
+        dir2 = new File("/media/arXiv");
+
+        children2 = dir2.list();
+        if (children2 != null) {
+            for (int i = 0; i < children2.length; i++) {
+                String filename = children2[i];
+                File f = new File("/media/arXiv/" + filename);
+                if (f.exists()) {
+                    f.delete();
+                }
+            }
+        }
+
+        Log.d("Arx","Opening Database 1");
+        droidDB = new arXivDB(this);
+        historys = droidDB.getHistory();
+
+        for (History history : historys) {
+            droidDB.deleteHistory(history.historyId);
+        }
+        droidDB.close();
+        Log.d("Arx","Closed Database 1");
+
+        Toast.makeText(this, "Deleted PDF history", Toast.LENGTH_SHORT).show();
+    }
+
 }
