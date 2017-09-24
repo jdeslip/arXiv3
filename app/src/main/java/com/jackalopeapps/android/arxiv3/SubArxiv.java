@@ -82,24 +82,24 @@ public class SubArxiv extends AppCompatActivity implements AdapterView.OnItemCli
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 
         // XXX
-        //if (mySourcePref == 0) {
-        //    Intent myIntent = new Intent(this, SearchListWindow.class);
-        //    myIntent.putExtra("keyname", shortItems[position]);
-        //    String tempquery = "search_query=cat:" + urls[position];
-        //    if (position == 0) {
-        //        tempquery = tempquery + "*";
-        //    }
-        //    myIntent.putExtra("keyquery", tempquery);
-        //    String tempurl = "http://export.arxiv.org/api/query?" + tempquery
-        //            + "&sortBy=submittedDate&sortOrder=ascending";
-        //    myIntent.putExtra("keyurl", tempurl);
-        //    startActivity(myIntent);
+        if (mySourcePref == 0) {
+            Intent myIntent = new Intent(this, SearchListWindow.class);
+            myIntent.putExtra("keyname", shortItems[position]);
+            String tempquery = "search_query=cat:" + urls[position];
+            if (position == 0) {
+                tempquery = tempquery + "*";
+            }
+            myIntent.putExtra("keyquery", tempquery);
+            String tempurl = "http://export.arxiv.org/api/query?" + tempquery
+                    + "&sortBy=submittedDate&sortOrder=ascending";
+            myIntent.putExtra("keyurl", tempurl);
+            startActivity(myIntent);
         //} else {
         //    Intent myIntent = new Intent(this, RSSListWindow.class);
         //    myIntent.putExtra("keyname", shortItems[position]);
         //    myIntent.putExtra("keyurl", urls[position]);
         //    startActivity(myIntent);
-        //}
+        }
     }
 
     public boolean onContextItemSelected(MenuItem item) {

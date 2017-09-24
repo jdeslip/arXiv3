@@ -576,38 +576,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
 
             // XXX - What do we do here;
-            //if (tempurl.contains("query")) {
-            //    Intent myIntent = new Intent(this, SearchListWindow.class);
-            //    myIntent.putExtra("keyquery", tempname);
-            //    myIntent.putExtra("keyname", tempquery);
-            //    myIntent.putExtra("keyurl", tempurl);
-            //    startActivity(myIntent);
+            if (tempurl.contains("query")) {
+                Intent myIntent = new Intent(this, SearchListWindow.class);
+                myIntent.putExtra("keyquery", tempname);
+                myIntent.putExtra("keyname", tempquery);
+                myIntent.putExtra("keyurl", tempurl);
+                startActivity(myIntent);
             //} else {
             //    Intent myIntent = new Intent(this, RSSListWindow.class);
             //    myIntent.putExtra("keyname", tempname);
             //    myIntent.putExtra("keyurl", tempurl);
             //    startActivity(myIntent);
-            //}
+            }
 
         } else {
             if (itemsFlag[position] == 0) {
                 // XXX
-                //if (mySourcePref == 1) {
+                if (mySourcePref == 1) {
                 //    Intent myIntent = new Intent(this, RSSListWindow.class);
                 //    myIntent.putExtra("keyname", shortItems[position]);
                 //    myIntent.putExtra("keyurl", urls[position]);
                 //    startActivity(myIntent);
-                //} else {
-                //    Intent myIntent = new Intent(this, SearchListWindow.class);
-                //    myIntent.putExtra("keyname", shortItems[position]);
-                //    String tempquery = "search_query=cat:" + urls[position] + "*";
-                //    myIntent.putExtra("keyquery", tempquery);
-                //    String tempurl = "http://export.arxiv.org/api/query?"
-                //            + tempquery
-                //            + "&sortBy=submittedDate&sortOrder=ascending";
-                //    myIntent.putExtra("keyurl", tempurl);
-                //    startActivity(myIntent);
-                //}
+                } else {
+                    Intent myIntent = new Intent(this, SearchListWindow.class);
+                    myIntent.putExtra("keyname", shortItems[position]);
+                    String tempquery = "search_query=cat:" + urls[position] + "*";
+                    myIntent.putExtra("keyquery", tempquery);
+                    String tempurl = "http://export.arxiv.org/api/query?"
+                            + tempquery
+                            + "&sortBy=submittedDate&sortOrder=ascending";
+                    myIntent.putExtra("keyurl", tempurl);
+                    startActivity(myIntent);
+                }
             } else {
                 Intent myIntent = new Intent(this, SubArxiv.class);
                 myIntent.putExtra("keyname", shortItems[position]);
