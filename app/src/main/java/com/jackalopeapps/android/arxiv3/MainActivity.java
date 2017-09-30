@@ -1,6 +1,7 @@
 package com.jackalopeapps.android.arxiv3;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -320,8 +321,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent myIntent = new Intent(view.getContext(), SearchWindow.class);
+                startActivity(myIntent);
             }
         });
 
@@ -355,17 +356,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             ScrollView scwv = new ScrollView(this);
             scwv.addView(wv);
 
-            Dialog dialog = new Dialog(this) {
-                public boolean onKeyDown(int keyCode, KeyEvent event) {
-                    if (keyCode != KeyEvent.KEYCODE_DPAD_LEFT)
-                        this.dismiss();
-                    return true;
-                }
-            };
-            dialog.setTitle(R.string.about_arxiv_droid);
-            dialog
-                    .addContentView(scwv, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+            //LinearLayout myLL = new LinearLayout(this);
+            //myLL.addView(scwv);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(scwv);
+            //XXX change to resource
+            builder.setTitle("About arXiv Mobile");
+            AlertDialog dialog = builder.create();
             dialog.show();
+
+            //Dialog dialog = new Dialog(this) {
+            //    public boolean onKeyDown(int keyCode, KeyEvent event) {
+            //        if (keyCode != KeyEvent.KEYCODE_DPAD_LEFT)
+            //            this.dismiss();
+            //        return true;
+            //    }
+            //};
+            //dialog.setTitle(R.string.about_arxiv_droid);
+            //dialog
+            //        .addContentView(scwv, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+            //dialog.show();
             return (true);
         } else if (id == R.id.action_view_history) {
             //XXX Need to enable history window
