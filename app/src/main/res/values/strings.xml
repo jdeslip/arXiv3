@@ -22,4 +22,11 @@
     <string name="search_fields">Search Fields:</string>
     <string name="search_from">Search From:</string>
     <string name="today">Today</string>
+    <string name="title_activity_single_item_window">SingleItemWindow</string>
+    <string name="size">Size:</string>
+    <string name="view_pdf">Get PDF</string>
+    <string name="share">Share Article</string>
+    <string name="download_failed">Error: Could not download PDF.</string>
+    <string name="no_storage">Neither /sdcard or /emmc available to download PDF.</string>
+    <string name="install_reader">You must install a PDF Reader from the Market. Try AdobeReader.</string>
 </resources>

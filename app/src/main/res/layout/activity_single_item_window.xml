@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/SV"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        >
+
+    </ScrollView>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        >
+
+        <TextView
+            android:id="@+id/tsize"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5sp"
+            android:text="@string/size"
+            android:visibility="visible"
+            android:layout_weight="0.3"
+            />
+
+        <ProgressBar
+            android:id="@+id/pbar"
+            android:textStyle="bold"
+            android:max="100"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:indeterminate="false"
+            android:indeterminateOnly="false"
+            android:progress="0"
+            android:paddingLeft="4sp"
+            android:paddingBottom="3sp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="36sp"
+            android:maxHeight="36sp"
+            android:layout_weight="0.3"
+            android:visibility="gone"
+            />
+
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pdfbutton"
+            android:text="@string/view_pdf"
+            android:onClick="pressedPDFButton"
+            android:paddingLeft="5sp"
+            android:paddingRight="5sp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

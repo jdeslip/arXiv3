@@ -768,4 +768,50 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Toast.makeText(this, "Deleted PDF history", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
+        mySourcePref=Integer.parseInt(prefs.getString("sourcelist", "0"));
+
+        Log.d("Arx","Opening Database 5");
+        droidDB = new arXivDB(this);
+        favorites = droidDB.getFeeds();
+        droidDB.close();
+        Log.d("Arx","Closed Database 5");
+
+        List<String> lfavorites = new ArrayList<String>();
+        List<String> lunread = new ArrayList<String>();
+        for (Feed feed : favorites) {
+            String unreadString = "";
+            if (feed.unread > 99) {
+                unreadString = "99+";
+            } else if (feed.unread == -2) {
+                unreadString = "-";
+            } else if (feed.unread <= 0) {
+                unreadString = "0";
+            } else if (feed.unread < 10) {
+                unreadString = ""+feed.unread;
+            } else {
+                unreadString = ""+feed.unread;
+            }
+            lfavorites.add(feed.title);
+            lunread.add(unreadString);
+        }
+
+        favoritesList = new String[lfavorites.size()];
+        unreadList = new String[lfavorites.size()];
+
+        lfavorites.toArray(favoritesList);
+        lunread.toArray(unreadList);
+
+        if (favList != null) {
+            favList.setAdapter(new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_1, lfavorites));
+            //favList.setAdapter(new myCustomAdapter());
+            registerForContextMenu(favList);
+        }
+
+    }
+
 }

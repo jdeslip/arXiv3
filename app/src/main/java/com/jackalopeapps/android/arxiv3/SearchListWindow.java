@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -202,17 +203,6 @@ public class SearchListWindow extends AppCompatActivity {
         menu.clear();
         populateMenu(menu);
         return (super.onCreateOptionsMenu(menu));
-    }
-
-    public void onListItemClick(ListView parent, View v, int position, long id) {
-    // XXX
-    //    Intent myIntent = new Intent(this, SingleItemWindow.class);
-    //    myIntent.putExtra("keytitle", titles[position]);
-    //    myIntent.putExtra("keylink", links[position]);
-    //    myIntent.putExtra("keydescription", descriptions[position]);
-    //    myIntent.putExtra("keycreator", creators[position]);
-    //    myIntent.putExtra("keyname", name);
-    //    startActivity(myIntent);
     }
 
     @Override
@@ -443,6 +433,20 @@ public class SearchListWindow extends AppCompatActivity {
         public void handleMessage(Message msg) {
 
             list.setAdapter(new myCustomAdapter());
+            list.setOnItemClickListener(
+                    new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                            Intent myIntent = new Intent(v.getContext(), SingleItemWindow.class);
+                            myIntent.putExtra("keytitle", titles[position]);
+                            myIntent.putExtra("keylink", links[position]);
+                            myIntent.putExtra("keydescription", descriptions[position]);
+                            myIntent.putExtra("keycreator", creators[position]);
+                            myIntent.putExtra("keyname", name);
+                            startActivity(myIntent);
+                        }
+                    }
+            );
 
         }
     };
