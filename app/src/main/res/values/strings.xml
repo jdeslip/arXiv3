@@ -29,4 +29,7 @@
     <string name="download_failed">Error: Could not download PDF.</string>
     <string name="no_storage">Neither /sdcard or /emmc available to download PDF.</string>
     <string name="install_reader">You must install a PDF Reader from the Market. Try AdobeReader.</string>
+    <string name="title_activity_history_window">HistoryWindow</string>
+    <string name="deleted_history">Deleted PDF history</string>
+    <string name="clear_history">Clear PDF history</string>
 </resources>

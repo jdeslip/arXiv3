@@ -379,9 +379,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //dialog.show();
             return (true);
         } else if (id == R.id.action_view_history) {
-            //XXX Need to enable history window
-            //Intent myIntent = new Intent(this, HistoryWindow.class);
-            //startActivity(myIntent);
+            Intent myIntent = new Intent(this, HistoryWindow.class);
+            startActivity(myIntent);
             return (true);
         } else if (id == R.id.action_clear_history) {
             deleteFiles();
