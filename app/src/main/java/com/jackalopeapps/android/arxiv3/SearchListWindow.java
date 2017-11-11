@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ import org.xml.sax.XMLReader;
 import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.SAXParser;
@@ -52,20 +54,21 @@ public class SearchListWindow extends AppCompatActivity {
     private String urlAddress;
     private String urlInput;
     private String query;
-    private String[] titles;
-    private String[] categories;
-    private String[] updatedDates;
-    private String[] publishedDates;
-    private String[] links;
-    private String[] listText;
-    private String[] listText2;
-    private String[] descriptions;
-    private String[] creators;
+    private ArrayList<String> titles;
+    private ArrayList<String> categories;
+    private ArrayList<String> updatedDates;
+    private ArrayList<String> publishedDates;
+    private ArrayList<String> links;
+    private ArrayList<String> listText;
+    private ArrayList<String> listText2;
+    private ArrayList<String> descriptions;
+    private ArrayList<String> creators;
     private int iFirstResultOnPage = 1;
     private int nResultsPerPage = 30;
     private int numberOfResultsOnPage;
     private int numberOfTotalResults;
     private int fontSize;
+    private Boolean vDone = false;
     private Boolean vCategory;
     private Boolean vFavorite=false;
     private Boolean vLoaded=false;
@@ -150,6 +153,15 @@ public class SearchListWindow extends AppCompatActivity {
             }
         }
         droidDB.close();
+        listText = new ArrayList<String>();
+        listText2 = new ArrayList<String>();
+        titles = new ArrayList<String>();
+        updatedDates = new ArrayList<String>();
+        publishedDates = new ArrayList<String>();
+        creators = new ArrayList<String>();
+        links = new ArrayList<String>();
+        descriptions = new ArrayList<String>();
+        categories = new ArrayList<String>();
 
         getInfoFromXML();
 
@@ -260,9 +272,9 @@ public class SearchListWindow extends AppCompatActivity {
                 holder=(ViewHolder)row.getTag();
             }
             try {
-                holder.text1.setText(listText[position]);
+                holder.text1.setText(listText.get(position));
                 holder.text1.setTextSize(fontSize);
-                holder.text2.setText(listText2[position]);
+                holder.text2.setText(listText2.get(position));
                 holder.text2.setTextSize(fontSize - 2);
                 //XXX Color
 
@@ -322,37 +334,31 @@ public class SearchListWindow extends AppCompatActivity {
 
                     txtInfo.post(new Runnable() {
                         public void run() {
-                            txtInfo.setText("Showing " + fnmin + " through "
+                            txtInfo.setText("Showing 1 through "
                                     + fnmax + " of " + fntotalitems);
                         }
                     });
 
-                    titles = new String[numberOfResultsOnPage];
-                    updatedDates = new String[numberOfResultsOnPage];
-                    publishedDates = new String[numberOfResultsOnPage];
-                    creators = new String[numberOfResultsOnPage];
-                    links = new String[numberOfResultsOnPage];
-                    listText = new String[numberOfResultsOnPage];
-                    listText2 = new String[numberOfResultsOnPage];
-                    descriptions = new String[numberOfResultsOnPage];
-                    categories = new String[numberOfResultsOnPage];
+                    Log.d("arxiv", "begining loop, fnmin is"+fnmin);
 
                     for (int i = 0; i < numberOfResultsOnPage; i++) {
-                        titles[i] = myXMLHandler.titles[i]
-                                .replaceAll("\n", " ").replaceAll(" +"," ");
-                        creators[i] = myXMLHandler.creators[i];
-                        updatedDates[i] = myXMLHandler.updatedDates[i];
-                        publishedDates[i] = myXMLHandler.publishedDates[i];
-                        categories[i] = myXMLHandler.categories[i];
-                        links[i] = myXMLHandler.links[i];
-                        descriptions[i] = myXMLHandler.descriptions[i]
-                                .replaceAll("\n", " ");
+                        //Log.d("arxiv", "starting "+i);
+                        titles.add(myXMLHandler.titles[i]
+                                .replaceAll("\n", " ").replaceAll(" +"," "));
+                        creators.add(myXMLHandler.creators[i]);
+                        updatedDates.add(myXMLHandler.updatedDates[i]);
+                        publishedDates.add(myXMLHandler.publishedDates[i]);
+                        categories.add(myXMLHandler.categories[i]);
+                        links.add(myXMLHandler.links[i]);
+                        descriptions.add(myXMLHandler.descriptions[i]
+                                .replaceAll("\n", " "));
                         ;
-                        listText[i] = titles[i];
-                        listText2[i] = "";
-
+                        listText.add(titles.get(fnmin-1+i));
+                        String listText2i = "";
                         String creatort = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<begin>"
-                                + creators[i] + "\n</begin>";
+                                + creators.get(fnmin-1+i) + "\n</begin>";
+                        //Log.d("arxiv", "starting 2 "+i);
+
                         try {
                             SAXParserFactory spf2 = SAXParserFactory
                                     .newInstance();
@@ -362,25 +368,30 @@ public class SearchListWindow extends AppCompatActivity {
                             xr2.setContentHandler(myXMLHandler2);
                             xr2.parse(new InputSource(
                                     new StringReader(creatort)));
-                            listText2[i] = listText2[i] + "-Authors: "
+                            listText2i = listText2i + "-Authors: "
                                     + myXMLHandler2.creators[0];
                             for (int j = 1; j < myXMLHandler2.numItems; j++) {
-                                listText2[i] = listText2[i] + ", "
+                                listText2i = listText2i + ", "
                                         + myXMLHandler2.creators[j];
                             }
                         } catch (Exception e) {
                         }
-                        if (updatedDates[i].equals(publishedDates[i])) {
-                            listText2[i] = listText2[i] + "\n-Published: " + publishedDates[i].replace("T"," ").replace("Z","");
+                        //Log.d("arxiv", "starting 3 "+i);
+
+                        if (updatedDates.get(fnmin-1+i).equals(publishedDates.get(fnmin-1+i))) {
+                            listText2i = listText2i + "\n-Published: " + publishedDates.get(fnmin-1+i).replace("T"," ").replace("Z","");
                         } else {
-                            listText2[i] = listText2[i] + "\n-Updated: " + updatedDates[i].replace("T"," ").replace("Z","");
-                            listText2[i] = listText2[i] + "\n-Published: " + publishedDates[i].replace("T"," ").replace("Z","");
+                            listText2i = listText2i + "\n-Updated: " + updatedDates.get(fnmin-1+i).replace("T"," ").replace("Z","");
+                            listText2i = listText2i + "\n-Published: " + publishedDates.get(fnmin-1+i).replace("T"," ").replace("Z","");
                         }
-                        if (!query.contains(categories[i]) && vCategory) {
-                            listText2[i] = listText2[i] + "\n-Cross-Ref: "+categories[i];
+                        if (!query.contains(categories.get(fnmin-1+i)) && vCategory) {
+                            listText2i = listText2i + "\n-Cross-Ref: "+categories.get(fnmin-1+i);
                         } else if (!vCategory) {
-                            listText2[i] = listText2[i] + "\n-Category: "+categories[i];
+                            listText2i = listText2i + "\n-Category: "+categories.get(fnmin-1+i);
                         }
+                        //Log.d("arxiv", "starting 4 "+i);
+
+                        listText2.add(listText2i);
                     }
 
                     if (vFavorite && favFeed.count != numberOfTotalResults && numberOfTotalResults > 0) {
@@ -438,15 +449,49 @@ public class SearchListWindow extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                             Intent myIntent = new Intent(v.getContext(), SingleItemWindow.class);
-                            myIntent.putExtra("keytitle", titles[position]);
-                            myIntent.putExtra("keylink", links[position]);
-                            myIntent.putExtra("keydescription", descriptions[position]);
-                            myIntent.putExtra("keycreator", creators[position]);
+                            myIntent.putExtra("keytitle", titles.get(position));
+                            myIntent.putExtra("keylink", links.get(position));
+                            myIntent.putExtra("keydescription", descriptions.get(position));
+                            myIntent.putExtra("keycreator", creators.get(position));
                             myIntent.putExtra("keyname", name);
                             startActivity(myIntent);
                         }
                     }
             );
+            list.setOnScrollListener(new AbsListView.OnScrollListener() {
+                private int currentVisibleItemCount;
+                private int currentScrollState;
+                private int currentFirstVisibleItem;
+                private int totalItem;
+                private LinearLayout lBelow;
+
+
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    // TODO Auto-generated method stub
+                    this.currentScrollState = scrollState;
+                    this.isScrollCompleted();
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem,
+                                     int visibleItemCount, int totalItemCount) {
+                    // TODO Auto-generated method stub
+                    this.currentFirstVisibleItem = firstVisibleItem;
+                    this.currentVisibleItemCount = visibleItemCount;
+                    this.totalItem = totalItemCount;
+
+
+                }
+
+                private void isScrollCompleted() {
+                    if (totalItem - currentFirstVisibleItem == currentVisibleItemCount
+                            && this.currentScrollState == SCROLL_STATE_IDLE) {
+                        /** To do code here*/
+                        nextArticles();
+                    }
+                }
+            });
 
         }
     };
@@ -458,5 +503,17 @@ public class SearchListWindow extends AppCompatActivity {
             setProgressBarIndeterminateVisibility(false);
         }
     };
+
+    public void nextArticles() {
+        if (!vDone) {
+            iFirstResultOnPage = iFirstResultOnPage + nResultsPerPage;
+            urlAddress = "http://export.arxiv.org/api/query?" + query
+                    + "&sortBy=lastUpdatedDate&sortOrder=descending&start="
+                    + (iFirstResultOnPage - 1) + "&max_results=" + nResultsPerPage;
+            //Toast.makeText(thisActivity, "Loading More Results",
+            //        Toast.LENGTH_SHORT).show();
+            getInfoFromXML();
+        }
+    }
 
 }
