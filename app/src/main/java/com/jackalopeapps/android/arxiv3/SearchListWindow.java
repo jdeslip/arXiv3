@@ -68,11 +68,13 @@ public class SearchListWindow extends AppCompatActivity {
     private int numberOfResultsOnPage;
     private int numberOfTotalResults;
     private int fontSize;
+    private Boolean vListNotSet = true;
     private Boolean vDone = false;
     private Boolean vCategory;
     private Boolean vFavorite=false;
     private Boolean vLoaded=false;
     private int version;
+    private myCustomAdapter adapter;
 
     private arXivDB droidDB;
 
@@ -278,7 +280,7 @@ public class SearchListWindow extends AppCompatActivity {
                 holder.text2.setTextSize(fontSize - 2);
                 //XXX Color
 
-                Log.d("arxiv","drawing list item "+position);
+                //Log.d("arxiv","drawing list item "+position);
 
                 if (position%2 == 0) {
                     holder.linLay.setBackgroundResource(R.color.colorList);
@@ -339,7 +341,7 @@ public class SearchListWindow extends AppCompatActivity {
                         }
                     });
 
-                    Log.d("arxiv", "begining loop, fnmin is"+fnmin);
+                    Log.d("arxiv", "begining loop, fnmin is "+fnmin+" numberOfTotalResults is "+numberOfTotalResults);
 
                     for (int i = 0; i < numberOfResultsOnPage; i++) {
                         //Log.d("arxiv", "starting "+i);
@@ -419,6 +421,8 @@ public class SearchListWindow extends AppCompatActivity {
                         public void run() {
                             //txtInfo.setText(R.string.couldnt_parse);
                             txtInfo.setText("Error "+ef);
+                            Log.e("arxiv", "Error!! "+ef+" "+Log.getStackTraceString(ef));
+
                         }
                     });
 
@@ -443,55 +447,61 @@ public class SearchListWindow extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
 
-            list.setAdapter(new myCustomAdapter());
-            list.setOnItemClickListener(
-                    new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                            Intent myIntent = new Intent(v.getContext(), SingleItemWindow.class);
-                            myIntent.putExtra("keytitle", titles.get(position));
-                            myIntent.putExtra("keylink", links.get(position));
-                            myIntent.putExtra("keydescription", descriptions.get(position));
-                            myIntent.putExtra("keycreator", creators.get(position));
-                            myIntent.putExtra("keyname", name);
-                            startActivity(myIntent);
+            if (vListNotSet) {
+                adapter = new myCustomAdapter();
+                list.setAdapter(adapter);
+                list.setOnItemClickListener(
+                        new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                                Intent myIntent = new Intent(v.getContext(), SingleItemWindow.class);
+                                myIntent.putExtra("keytitle", titles.get(position));
+                                myIntent.putExtra("keylink", links.get(position));
+                                myIntent.putExtra("keydescription", descriptions.get(position));
+                                myIntent.putExtra("keycreator", creators.get(position));
+                                myIntent.putExtra("keyname", name);
+                                startActivity(myIntent);
+                            }
+                        }
+                );
+                list.setOnScrollListener(new AbsListView.OnScrollListener() {
+                    private int currentVisibleItemCount;
+                    private int currentScrollState;
+                    private int currentFirstVisibleItem;
+                    private int totalItem;
+                    private LinearLayout lBelow;
+
+
+                    @Override
+                    public void onScrollStateChanged(AbsListView view, int scrollState) {
+                        // TODO Auto-generated method stub
+                        this.currentScrollState = scrollState;
+                        this.isScrollCompleted();
+                    }
+
+                    @Override
+                    public void onScroll(AbsListView view, int firstVisibleItem,
+                                         int visibleItemCount, int totalItemCount) {
+                        // TODO Auto-generated method stub
+                        this.currentFirstVisibleItem = firstVisibleItem;
+                        this.currentVisibleItemCount = visibleItemCount;
+                        this.totalItem = totalItemCount;
+
+
+                    }
+
+                    private void isScrollCompleted() {
+                        if (totalItem - currentFirstVisibleItem == currentVisibleItemCount
+                                && this.currentScrollState == SCROLL_STATE_IDLE) {
+                            /** To do code here*/
+                            nextArticles();
                         }
                     }
-            );
-            list.setOnScrollListener(new AbsListView.OnScrollListener() {
-                private int currentVisibleItemCount;
-                private int currentScrollState;
-                private int currentFirstVisibleItem;
-                private int totalItem;
-                private LinearLayout lBelow;
-
-
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    // TODO Auto-generated method stub
-                    this.currentScrollState = scrollState;
-                    this.isScrollCompleted();
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem,
-                                     int visibleItemCount, int totalItemCount) {
-                    // TODO Auto-generated method stub
-                    this.currentFirstVisibleItem = firstVisibleItem;
-                    this.currentVisibleItemCount = visibleItemCount;
-                    this.totalItem = totalItemCount;
-
-
-                }
-
-                private void isScrollCompleted() {
-                    if (totalItem - currentFirstVisibleItem == currentVisibleItemCount
-                            && this.currentScrollState == SCROLL_STATE_IDLE) {
-                        /** To do code here*/
-                        nextArticles();
-                    }
-                }
-            });
+                });
+                vListNotSet = false;
+            } else {
+                adapter.notifyDataSetChanged();
+            }
 
         }
     };
