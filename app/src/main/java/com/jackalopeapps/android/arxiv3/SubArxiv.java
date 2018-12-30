@@ -69,8 +69,8 @@ public class SubArxiv extends AppCompatActivity implements AdapterView.OnItemCli
         list.setOnItemClickListener(this);
         registerForContextMenu(list);
 
-        SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
-        mySourcePref=Integer.parseInt(prefs.getString("sourcelist", "0"));
+        //SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
+        //mySourcePref=Integer.parseInt(prefs.getString("sourcelist", "0"));
 
     }
 
@@ -90,7 +90,7 @@ public class SubArxiv extends AppCompatActivity implements AdapterView.OnItemCli
                 tempquery = tempquery + "*";
             }
             myIntent.putExtra("keyquery", tempquery);
-            String tempurl = "http://export.arxiv.org/api/query?" + tempquery
+            String tempurl = "https://export.arxiv.org/api/query?" + tempquery
                     + "&sortBy=submittedDate&sortOrder=ascending";
             myIntent.putExtra("keyurl", tempurl);
             startActivity(myIntent);
@@ -117,16 +117,16 @@ public class SubArxiv extends AppCompatActivity implements AdapterView.OnItemCli
             if (info.position == 0) {
                 tempquery = tempquery + "*";
             }
-            String tempurl = "http://export.arxiv.org/api/query?" + tempquery
+            String tempurl = "https://export.arxiv.org/api/query?" + tempquery
                     + "&sortBy=submittedDate&sortOrder=ascending";
             droidDB.insertFeed(shortItems[info.position],
                     tempquery, tempurl, -1,-1);
-        } else {
-            String tempquery = urls[info.position];
-            String tempurl = tempquery;
-            droidDB.insertFeed(shortItems[info.position]+" (RSS)", shortItems[info.position], tempurl,-2,-2);
-            Toast.makeText(this, R.string.added_to_favorites_rss,
-                    Toast.LENGTH_SHORT).show();
+        //} else {
+        //    String tempquery = urls[info.position];
+        //    String tempurl = tempquery;
+        //    droidDB.insertFeed(shortItems[info.position]+" (RSS)", shortItems[info.position], tempurl,-2,-2);
+        //    Toast.makeText(this, R.string.added_to_favorites_rss,
+        //            Toast.LENGTH_SHORT).show();
         }
         droidDB.close();
 

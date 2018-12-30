@@ -233,7 +233,7 @@ public class SearchWindow extends AppCompatActivity implements
             tittext = tittext.substring(0, 30);
         }
         myIntent.putExtra("keyname", tittext);
-        String urlad = "http://export.arxiv.org/api/query?"
+        String urlad = "https://export.arxiv.org/api/query?"
                 + totalsearch
                 + "&sortBy=lastUpdatedDate&sortOrder=descending&start=0&max_results=20";
         Log.d("arXiv - ", urlad);

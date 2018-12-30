@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">arXiv Mobile</string>
-    <string name="about_text">\narXiv Mobile is an open-source application to browse daily scientific articles submitted to arXiv.org and to search the entire arXiv.org database. \n\nViewing PDFs requires a PDF viewer installed on your device.\n\nYou can add categories and custom searches to your favorites list and can share articles by pressing menu on the article screen.\n</string>
-    <string name="about_arxiv_droid">About arXiv mobile</string>
+    <string name="app_name">arXiv Browser</string>
+    <string name="about_text">\narXiv Browser is an open-source application to browse daily scientific articles submitted to arXiv.org and to search the entire arXiv.org database. \n\nViewing PDFs requires a PDF viewer installed on your device.\n\nYou can add categories and custom searches to your favorites list and can share articles by pressing menu on the article screen.\n</string>
+    <string name="about_arxiv_droid">About arXiv Browser</string>
     <string name="tab_text_1">Categories</string>
     <string name="tab_text_2">Favorites</string>
     <string name="action_settings">Settings</string>

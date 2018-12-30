@@ -145,8 +145,8 @@ public class SingleItemWindow extends AppCompatActivity {
         authortext = authortext.replace(" ", "+").replace("-", "_");
         authortext = "search_query=au:%22" + authortext + "%22";
         // String urlad =
-        // "http://export.arxiv.org/api/query?search_query=au:feliciano+giustino&sortBy=lastUpdatedDate&sortOrder=descending&start=0&max_results=20";
-        String urlad = "http://export.arxiv.org/api/query?search_query="
+        // "https://export.arxiv.org/api/query?search_query=au:feliciano+giustino&sortBy=lastUpdatedDate&sortOrder=descending&start=0&max_results=20";
+        String urlad = "https://export.arxiv.org/api/query?search_query="
                 + authortext
                 + "&sortBy=lastUpdatedDate&sortOrder=descending&start=0&max_results=20";
         // header.setText(authortext);
@@ -167,8 +167,8 @@ public class SingleItemWindow extends AppCompatActivity {
         authortext = authortext.replace(" ", "+").replace("-", "_");
         authortext = "search_query=au:%22" + authortext + "%22";
         // String urlad =
-        // "http://export.arxiv.org/api/query?search_query=au:feliciano+giustino&sortBy=lastUpdatedDate&sortOrder=descending&start=0&max_results=20";
-        String urlad = "http://export.arxiv.org/api/query?search_query="
+        // "https://export.arxiv.org/api/query?search_query=au:feliciano+giustino&sortBy=lastUpdatedDate&sortOrder=descending&start=0&max_results=20";
+        String urlad = "https://export.arxiv.org/api/query?search_query="
                 + authortext
                 + "&sortBy=lastUpdatedDate&sortOrder=descending&start=0&max_results=20";
         // header.setText(authortext);
@@ -342,6 +342,7 @@ public class SingleItemWindow extends AppCompatActivity {
                             Log.d("arXiv - ", "PDF url: " + link);
 
                             String pdfaddress = link.replace("abs", "pdf").replace("http", "https");
+                            //String pdfaddress = link.replace("abs", "pdf");
 
                             Log.d("arXiv - ", "PDF url 2: " + pdfaddress);
 
@@ -470,6 +471,7 @@ public class SingleItemWindow extends AppCompatActivity {
 
                 try {
                     String pdfaddress = link.replace("abs", "pdf").replace("http","https");
+                    //String pdfaddress = link.replace("abs", "pdf");
 
                     pdfaddress = pdfaddress + ".pdf";
 

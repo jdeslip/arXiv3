@@ -111,7 +111,7 @@ public class SearchListWindow extends AppCompatActivity {
 
         getSupportActionBar().setTitle(name);
 
-        urlAddress = "http://export.arxiv.org/api/query?" + query
+        urlAddress = "https://export.arxiv.org/api/query?" + query
                 + "&sortBy=lastUpdatedDate&sortOrder=descending&start="
                 + (iFirstResultOnPage - 1) + "&max_results=" + nResultsPerPage;
 
@@ -334,6 +334,12 @@ public class SearchListWindow extends AppCompatActivity {
                     final int fntotalitems = numberOfTotalResults;
 
 
+
+                    if (fnmax == fntotalitems) {
+                        vDone = true;
+                        Log.d("arxiv", "I set vDone to True");
+                    }
+
                     txtInfo.post(new Runnable() {
                         public void run() {
                             txtInfo.setText("Showing 1 through "
@@ -515,9 +521,10 @@ public class SearchListWindow extends AppCompatActivity {
     };
 
     public void nextArticles() {
+        Log.d("arxiv", "Calling nextArticles");
         if (!vDone) {
             iFirstResultOnPage = iFirstResultOnPage + nResultsPerPage;
-            urlAddress = "http://export.arxiv.org/api/query?" + query
+            urlAddress = "https://export.arxiv.org/api/query?" + query
                     + "&sortBy=lastUpdatedDate&sortOrder=descending&start="
                     + (iFirstResultOnPage - 1) + "&max_results=" + nResultsPerPage;
             //Toast.makeText(thisActivity, "Loading More Results",

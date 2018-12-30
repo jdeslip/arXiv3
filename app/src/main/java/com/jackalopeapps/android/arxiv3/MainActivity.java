@@ -326,8 +326,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
-        mySourcePref=Integer.parseInt(prefs.getString("sourcelist", "0"));
+        //SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
+        //mySourcePref=Integer.parseInt(prefs.getString("sourcelist", "0"));
 
     }
 
@@ -385,9 +385,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         } else if (id == R.id.action_clear_history) {
             deleteFiles();
             return (true);
-        } else if (id == R.id.action_preferences) {
-            startActivity(new Intent(this, EditPreferences.class));
-            return (true);
+        //} else if (id == R.id.action_preferences) {
+        //    startActivity(new Intent(this, EditPreferences.class));
+        //    return (true);
         }
 
         return super.onOptionsItemSelected(item);
@@ -539,15 +539,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             //XXX mySourcePref Doesn't get updated after a change in prefences until the app is opened again
             if (mySourcePref == 0) {
                 String tempquery = "search_query=cat:" + urls[info.position] + "*";
-                String tempurl = "http://export.arxiv.org/api/query?" + tempquery
+                String tempurl = "https://export.arxiv.org/api/query?" + tempquery
                         + "&sortBy=submittedDate&sortOrder=ascending";
                 droidDB.insertFeed(shortItems[info.position], tempquery, tempurl,-1,-1);
-            } else {
-                String tempquery = urls[info.position];
-                String tempurl = tempquery;
-                droidDB.insertFeed(shortItems[info.position]+" (RSS)", shortItems[info.position], tempurl,-2,-2);
-                Toast.makeText(this, R.string.added_to_favorites_rss,
-                        Toast.LENGTH_SHORT).show();
+            //} else {
+            //    String tempquery = urls[info.position];
+            //    String tempurl = tempquery;
+            //    droidDB.insertFeed(shortItems[info.position]+" (RSS)", shortItems[info.position], tempurl,-2,-2);
+            //    Toast.makeText(this, R.string.added_to_favorites_rss,
+            //            Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -612,7 +612,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     myIntent.putExtra("keyname", shortItems[position]);
                     String tempquery = "search_query=cat:" + urls[position] + "*";
                     myIntent.putExtra("keyquery", tempquery);
-                    String tempurl = "http://export.arxiv.org/api/query?"
+                    String tempurl = "https://export.arxiv.org/api/query?"
                             + tempquery
                             + "&sortBy=submittedDate&sortOrder=ascending";
                     myIntent.putExtra("keyurl", tempurl);
@@ -770,8 +770,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
-        mySourcePref=Integer.parseInt(prefs.getString("sourcelist", "0"));
+        //SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
+        //mySourcePref=Integer.parseInt(prefs.getString("sourcelist", "0"));
 
         Log.d("Arx","Opening Database 5");
         droidDB = new arXivDB(this);
