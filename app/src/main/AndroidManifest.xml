@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jackalopeapps.android.arxiv3">
+    package="com.commonsware.android.arXiv">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -24,7 +24,7 @@
         </provider>
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.commonsware.android.arXiv.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -33,12 +33,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditPreferences" />
-        <activity android:name=".SubArxiv" />
-        <activity android:name=".SearchListWindow" />
-        <activity android:name=".SearchWindow" />
-        <activity android:name=".SingleItemWindow" />
-        <activity android:name=".HistoryWindow" />
+        <activity android:name="com.commonsware.android.arXiv.EditPreferences" />
+        <activity android:name="com.commonsware.android.arXiv.SubArxiv" />
+        <activity android:name="com.commonsware.android.arXiv.SearchListWindow" />
+        <activity android:name="com.commonsware.android.arXiv.SearchWindow" />
+        <activity android:name="com.commonsware.android.arXiv.SingleItemWindow" />
+        <activity android:name="com.commonsware.android.arXiv.HistoryWindow" />
     </application>
 
 </manifest>
