@@ -1,8 +1,9 @@
 arXiv Browser
+============
 
 arXiv Browser - An Android App for arXiv.org
 
-<a href="https://github.com/jdeslip/arXiv-mobile/tree/master/app/release">Previous Version</a>
+<a href="https://github.com/jdeslip/arXiv-mobile/tree/master/app/release">Previous Version 2.x APK</a><br><br>Latest Versions:<br>
 <a href="https://f-droid.org/packages/com.commonsware.android.arXiv/" target="_blank">
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="90"/></a>
 <a href="https://play.google.com/store/apps/details?id=com.commonsware.android.arXiv" target="_blank">
