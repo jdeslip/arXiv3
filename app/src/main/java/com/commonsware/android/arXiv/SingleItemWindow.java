@@ -508,7 +508,7 @@ public class SingleItemWindow extends AppCompatActivity {
         }
 
         linLay = new LinearLayout(this);
-        //linLay.setOrientation(1);
+        linLay.setOrientation(1);
         linLay.addView(titleTextView);
 
         abstractTextView.setText("Abstract: " + description);
